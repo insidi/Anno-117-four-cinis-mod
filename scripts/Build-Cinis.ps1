@@ -5,11 +5,18 @@ $dotnet = Join-Path $root 'tools/dotnet6/dotnet.exe'
 $builder = Join-Path $root 'tools/map-build/MapBuild.dll'
 $rda = Join-Path $root 'tools/package/external/build/RdaConsole.exe'
 $mod = Join-Path $root 'dist/cinis-four-directions'
+# Second build stage (0.3.0): Python 3 with numpy, see scripts/cinis_v2/README.md.
+$python = if ($env:CINIS_PYTHON) { $env:CINIS_PYTHON } else { 'python' }
+$stage2 = Join-Path $PSScriptRoot 'cinis_v2/build_v2.py'
 New-Item -ItemType Directory -Force $mod | Out-Null
 
 function Run-Builder([string[]]$Arguments) {
     & $dotnet $builder @Arguments
     if ($LASTEXITCODE -ne 0) { throw ('MapBuild failed: ' + ($Arguments -join ' ')) }
+}
+function Run-Stage2([string[]]$Arguments) {
+    & $python $stage2 @Arguments
+    if ($LASTEXITCODE -ne 0) { throw ('build_v2.py failed: ' + ($Arguments -join ' ')) }
 }
 
 # Each source is the installed DLC version; patch scans found no overrides for Default templates.
@@ -55,18 +62,13 @@ foreach ($variant in $variants) {
     [IO.File]::WriteAllText($target + '.a7te', $editor.ToString(), (New-Object Text.UTF8Encoding $false))
 }
 
+# Stage 2 (0.3.0). data/phil/cinis_four stays loadable for 0.2.0 savegames, which store that template
+# path and the old positions: only its Easy world is rebuilt so the baked Cinis terrain matches them.
+# data/phil/cinis_four_v2 is the layout for new games (Cinis in the corners, rotated terrain).
+Run-Stage2 @('maps', $mod, (Join-Path $root 'research/map-default-easy/gamedata.data'))
+# assets.xml: template path to cinis_four_v2, generator settings, horizon islands scaled to 4096.
 $assetsDir = Join-Path $mod 'data/base/config/export'
-New-Item -ItemType Directory -Force $assetsDir | Out-Null
-$assets = New-Object System.Text.StringBuilder
-[void]$assets.AppendLine('<ModOps>')
-foreach ($variant in $variants) {
-    $path = 'data/phil/cinis_four/' + $variant.Name + '/cinis_four_' + $variant.Name + '.a7t'
-    [void]$assets.AppendLine(('  <ModOp GUID="{0}" Merge="MapTemplate"><MapTemplate><EnlargedTemplateFilename>{1}</EnlargedTemplateFilename><Attraction><WiggleIterationCount>0</WiggleIterationCount><ShrinkWorld>0</ShrinkWorld></Attraction></MapTemplate></ModOp>' -f $variant.Guid,$path))
-    # Vanilla horizon decorations use the old outer boundary; omit them on the expanded test map.
-    [void]$assets.AppendLine(('  <ModOp GUID="{0}" Replace="MapTemplate/EnlargedHorizonIslands"><EnlargedHorizonIslands /></ModOp>' -f $variant.Guid))
-}
-[void]$assets.AppendLine('</ModOps>')
-[IO.File]::WriteAllText((Join-Path $assetsDir 'assets.xml'),$assets.ToString(),(New-Object Text.UTF8Encoding $false))
+Run-Stage2 @('assets', (Join-Path $root 'research/config/data/base/config/export/assets.xml'), $mod)
 
 # Check every targeted GUID/path against actual source assets, not just XML syntax.
 $sourceAssets = New-Object System.Xml.XmlDocument
@@ -78,4 +80,4 @@ foreach ($operation in $patch.ModOps.ModOp) {
     if ($matches.Count -ne 1) { throw ('Patch target not unique: ' + $operation.GUID) }
 }
 & (Join-Path $PSScriptRoot 'Package-Cinis.ps1')
-Write-Output 'PASS: three variants built, RDA payload hashes verified, six patch targets verified, ZIP created.'
+Write-Output 'PASS: three variants built (old and v2 layout), RDA payload hashes verified, six patch targets verified, ZIP created.'
