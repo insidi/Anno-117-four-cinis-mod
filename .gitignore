@@ -1,0 +1,44 @@
+# Local third-party tools, runtimes, SDKs and downloaded sources
+/tools/
+
+# Generated mod folders, archives and checksums
+/dist/
+
+# Extracted game data and generated analysis; retain the project notes
+/research/*
+!/research/STATUS.md
+
+# .NET build and IDE output
+**/bin/
+**/obj/
+/.vs/
+/.idea/
+*.user
+*.suo
+*.dll
+*.exe
+*.pdb
+
+# Game archives and binary map data, including accidental extractions elsewhere
+*.rda
+*.a7m
+*.a7minfo
+*.a7t
+*.a7tinfo
+*.a7te
+*.a8s
+*.a7s
+gamedata.data
+
+# Downloaded or generated archives
+*.zip
+*.tgz
+*.nupkg
+
+# Local logs and temporary files
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db
+Desktop.ini

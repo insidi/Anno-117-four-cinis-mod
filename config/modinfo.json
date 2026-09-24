@@ -1,0 +1,22 @@
+{
+  "Anno": 8,
+  "ModID": "cinis-four-directions-phil",
+  "Version": "0.2.0",
+  "Difficulty": "unchanged",
+  "Category": { "English": "Map", "German": "Karte" },
+  "ModName": {
+    "English": "Four Cinis - Multiplayer Prototype",
+    "German": "Vier Cinis - Mehrspieler-Testversion"
+  },
+  "Description": {
+    "English": "Experimental Default Latium DLC map with four Cinis. Multiplayer enabled: all players must use the identical mod package and game version. Requires Volcano DLC in the session and a new sandbox game. In-game synchronization, eruptions and quests are not yet tested.",
+    "German": "Experimentelle Standard-Latium-Karte mit vier Cinis. Mehrspieler aktiviert: Alle Spieler muessen dasselbe Modpaket und dieselbe Spielversion verwenden. Vulkan-DLC in der Sitzung und neues freies Spiel erforderlich. Synchronisation, Ausbrueche und Quests noch nicht im Spiel getestet."
+  },
+  "CreatorName": "Phil",
+  "GameSetup": {
+    "RequiresNewGame": true,
+    "SafeToRemove": false,
+    "Multiplayer": true,
+    "Campaign": false
+  }
+}
