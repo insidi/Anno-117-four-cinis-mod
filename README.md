@@ -27,14 +27,18 @@ Experimentelle Kartenmod für **Anno 117: Pax Romana**: je eine Cinis-Insel im N
 
 Die HTML-Vorschau lokal herunterladen und im Browser öffnen; GitHub zeigt die Datei als Quelltext an.
 
+## Download
+
+Das fertige Modpaket liegt als ZIP bei den [Releases](https://github.com/insidi/Anno-117-four-cinis-mod/releases). Aktuelle Version: [v0.3.0](https://github.com/insidi/Anno-117-four-cinis-mod/releases/tag/v0.3.0). Neben dem ZIP liegt eine `.sha256`-Datei zum Prüfen des Downloads. Das Git-Repository selbst enthält nur Quellcode und Dokumentation; die Kartendateien werden nicht eingecheckt.
+
 ## Installation
 
-Das Git-Repository enthält den Quellcode und die Dokumentation. Das fertige Modpaket wird lokal unter `dist/cinis-four-directions-v0.3.0.zip` erzeugt und nicht in Git eingecheckt.
-
-1. Anno 117 schließen und das fertige ZIP entpacken.
+1. Anno 117 schließen und das ZIP aus dem Release entpacken.
 2. Den Ordner `cinis-four-directions` in den eigenen Dokumente-Ordner unter `Anno 117 - Pax Romana/mods/` kopieren.
 3. Prüfen, dass `modinfo.json` direkt im Modordner liegt, und die Mod im Spiel aktivieren.
 4. Ein neues freies Spiel mit **Standard/Default-Latium** und aktiviertem Vulkan-DLC starten.
+
+Beim Update von 0.2.0 den alten Modordner vorher löschen; ein vorhandener 0.2.0-Spielstand lädt danach weiter.
 
 Für Mehrspieler installiert jeder Teilnehmer dasselbe ZIP. Der Host erstellt eine neue Partie. Den ersten Versuch mit einem separaten Testspielstand durchführen; die vollständigen Prüfschritte stehen in der [Testanleitung](docs/TESTANLEITUNG.md).
 
@@ -93,7 +97,7 @@ Sind die Karten bereits gebaut und wurden nur Metadaten oder die Testanleitung g
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Package-Cinis.ps1
 ```
 
-Das ZIP und seine SHA256-Prüfsumme liegen anschließend in `dist/`. Die Version stammt aus `config/modinfo.json`.
+Das ZIP und seine SHA256-Prüfsumme liegen anschließend in `dist/`. Die Version stammt aus `config/modinfo.json`. Für eine neue Version werden beide Dateien als Anhang an ein Release mit dem Tag `v<Version>` gehängt.
 
 ## Validierung
 
