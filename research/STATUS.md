@@ -37,9 +37,23 @@ Installation: C:\Program Files (x86)\Steam\steamapps\common\Anno 117 - Pax Roman
 - Generatorverschiebung und ShrinkWorld deaktiviert; alte erweiterte Horizontdekorationen entfernt.
 - Build: `powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Compile-MapBuild.ps1`, danach `scripts/Build-Cinis.ps1`, `scripts/Validate-Cinis.ps1`, `scripts/Make-Preview.ps1` mit denselben PowerShell-Optionen.
 - Validierung: FileDB-Knoten/Nutzdaten nach erneutem Einlesen gleich; RDA entpackt und SHA256 gleich; vier Cinis je Variante; konservative Inselrechtecke kollisionsfrei gegen Cinis; xmltest2 veraendert exakt drei Karten-Assets ohne Warnungen. Siehe research/validation.json.
-- Noch NICHT installiert oder im Spiel getestet. Originalinstallation und Spielstaende unveraendert.
+- 0.2.0 wurde anschliessend im Spiel getestet; Befunde siehe Version 0.3.0.
+
+## Version 0.3.0 (24.09.2026, im Spiel getestet)
+- Befund aus dem Spieltest von 0.2.0: Schiffe fuhren durch die drei Kopien, die Kamera stieg ueber ihren Vulkanen nicht an.
+- Ursache: Die Weltdatei (.a7t, TerrainManager/HeightMap) enthaelt Kontinent- und Vulkanlandmasse der Cinis eingebacken; Kollision und Kamerahoehe kommen daraus, die sichtbare Insel aus der Inseldatei. In der Easy-Originalvorlage liegt dieser Block in der Ecke (1920,1920). MapBuild `resize` verschiebt die ganze Welt um +1024, der Block lag damit bei (2944,2944), die Nord-Cinis der .a7tinfo aber bei (3200,3200). Die drei Kopien hatten gar kein Terrain. Gedrehte Kopien muessen auch in Hoehenkarte und AreaIDs gedreht werden.
+- Zusaetzlich lief die alte Kartenrandlinie (Hoehe 0) bei Kachel 3712 als Grat durch die Karte.
+- Medium- und Hard-Originalwelten haben eine flache Hoehenkarte (ueberall 0) ohne eingebackenes Terrain.
+- Ein Spielstand speichert Vorlagenpfad, Positionen und Rotation90 der Vorlage, laedt das Terrain aber bei jedem Laden neu aus der .a7t. Deshalb bleibt `data/phil/cinis_four` erhalten und nur dessen Easy-.a7t wird neu gebaut (Terrain an 3200/3200, 3200/128, 128/128, 128/3200).
+- Neues Layout `data/phil/cinis_four_v2` fuer neue Spiele: (3328,3328) Rotation90 0, (3328,0) 3, (0,0) 2, (0,3328) 1; PlayableArea 268..3828 in .a7tinfo und (Easy) SessionSettings. Rotation90=1 bildet lokal (u,v) auf (768-v,u) ab, am Spielstand nachgemessen.
+- RDA: Das Spiel oeffnete die .a7t nur mit zlib-Stufe 1 (Header 78 01).
+- assets.xml: EnlargedTemplateFilename auf cinis_four_v2; Horizontinseln wieder aktiv, Positionen mit 4096/2688 skaliert, Vulkan-Meshes fuer alle vier Ecken gedreht.
+- Build: zweite Stufe `scripts/cinis_v2/build_v2.py` (Python 3 + numpy), aufgerufen von `Build-Cinis.ps1`. Mit den 0.2.0-Eingaben byte-identisch zum getesteten Paket.
+- Spieltest: laufender 0.2.0-Mehrspielerspielstand (Easy) mit 0.3.0 geladen, Kopien fest, Kamera folgt den Vulkanen; Rueckseiten im alten Layout weiterhin durchfahrbar. Neues Spiel: alle vier Ecken korrekt gedreht.
 
 ## Noch offen: Laufzeittest
+- Neue Spiele mit Medium und Hard gezielt pruefen (keine eingebackene Hoehe; SessionSettings/PlayableArea der Weltdatei ist dort noch 20..4076, in der .a7tinfo 268..3828).
+- Ausrichtung der Horizont-Vulkan-Meshes in allen vier Ecken pruefen.
 - Neues freies Mehrspielerspiel mit Vulkan-DLC und Standard/Default-Kartentyp auf mindestens zwei Rechnern erzeugen.
 - Kartenvergroesserung und vier tatsaechlich vorhandene/besiedelbare Inseln pruefen.
 - Verhalten des einzelnen regionalen VolcanoEruptionManager bei vier Vulkanobjekten pruefen.

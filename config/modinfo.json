@@ -1,7 +1,7 @@
 {
   "Anno": 8,
   "ModID": "cinis-four-directions-phil",
-  "Version": "0.2.0",
+  "Version": "0.3.0",
   "Difficulty": "unchanged",
   "Category": { "English": "Map", "German": "Karte" },
   "ModName": {
@@ -9,12 +9,12 @@
     "German": "Vier Cinis - Mehrspieler-Testversion"
   },
   "Description": {
-    "English": "Experimental Default Latium DLC map with four Cinis. Multiplayer enabled: all players must use the identical mod package and game version. Requires Volcano DLC in the session and a new sandbox game. In-game synchronization, eruptions and quests are not yet tested.",
-    "German": "Experimentelle Standard-Latium-Karte mit vier Cinis. Mehrspieler aktiviert: Alle Spieler muessen dasselbe Modpaket und dieselbe Spielversion verwenden. Vulkan-DLC in der Sitzung und neues freies Spiel erforderlich. Synchronisation, Ausbrueche und Quests noch nicht im Spiel getestet."
+    "English": "Default Latium DLC map with four Cinis (4096x4096). 0.3.0: baked continental terrain fixed for all four Cinis (ships no longer sail through the copies, camera follows the volcano), map-border ridge removed, horizon islands restored. Existing 0.2.0 games keep their layout and get the terrain fix; new games use the new corner layout with rotated Cinis. All players must use the identical package.",
+    "German": "Standard-Latium-DLC-Karte mit vier Cinis (4096x4096). 0.3.0: Eingebackenes Kontinent-Terrain fuer alle vier Cinis korrigiert (Schiffe fahren nicht mehr durch die Kopien, Kamera folgt dem Vulkan), Kartenrand-Grat entfernt, Horizontinseln wiederhergestellt. Bestehende 0.2.0-Spiele behalten ihr Layout und bekommen die Terrainkorrektur; neue Spiele nutzen das neue Ecken-Layout mit gedrehten Cinis. Alle Spieler muessen dasselbe Paket verwenden."
   },
   "CreatorName": "Phil",
   "GameSetup": {
-    "RequiresNewGame": true,
+    "RequiresNewGame": false,
     "SafeToRemove": false,
     "Multiplayer": true,
     "Campaign": false
