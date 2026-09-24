@@ -29,14 +29,21 @@ if (($changed | Sort-Object) -join ',' -ne '3377,44421,44422') { throw ('Unexpec
 foreach ($id in $changed) {
     $map = $patched.SelectSingleNode('//Asset[Values/Standard/GUID="' + $id + '"]/Values/MapTemplate')
     if ($map.Attraction.ShrinkWorld -ne '0' -or $map.Attraction.WiggleIterationCount -ne '0') { throw 'Generator layout settings not applied' }
-    if ($map.EnlargedHorizonIslands.HasChildNodes) { throw 'Old horizon islands remain' }
-    $a7t = Join-Path $mod $map.EnlargedTemplateFilename
-    foreach ($extension in @('.a7t','.a7te','.a7tinfo')) {
-        if (-not (Test-Path ([IO.Path]::ChangeExtension($a7t,$extension)))) { throw ('Missing template component: ' + $extension) }
+    # 0.3.0: 15 scaled vanilla horizon islands plus the two volcano meshes repeated for four corners.
+    $horizon = $map.SelectNodes('EnlargedHorizonIslands/Item')
+    $volcanoMeshes = @($horizon | Where-Object { $_.HorizonIslandFile -like '*volcano_mesh*' })
+    if ($horizon.Count -ne 23 -or $volcanoMeshes.Count -ne 8) { throw ('Unexpected horizon islands: ' + $horizon.Count + ' items, ' + $volcanoMeshes.Count + ' volcano meshes') }
+    $name = $map.EnlargedTemplateFilename -replace '^data/phil/cinis_four_v2/([a-z]+)/.*$','$1'
+    if ($map.EnlargedTemplateFilename -ne ('data/phil/cinis_four_v2/' + $name + '/cinis_four_v2_' + $name + '.a7t')) { throw ('Unexpected template path: ' + $map.EnlargedTemplateFilename) }
+    # The old path stays in the package: 0.2.0 savegames store it and reload the world from it.
+    foreach ($a7t in @((Join-Path $mod $map.EnlargedTemplateFilename), (Join-Path $mod ('data/phil/cinis_four/' + $name + '/cinis_four_' + $name + '.a7t')))) {
+        foreach ($extension in @('.a7t','.a7te','.a7tinfo')) {
+            if (-not (Test-Path ([IO.Path]::ChangeExtension($a7t,$extension)))) { throw ('Missing template component: ' + [IO.Path]::ChangeExtension($a7t,$extension)) }
+        }
+        $editor = New-Object System.Xml.XmlDocument
+        $editor.Load([IO.Path]::ChangeExtension($a7t,'.a7te'))
+        if ($editor.AnnoEditorLevel.Dimensions.X -ne '4096' -or $editor.SelectNodes('//Chunk').Count -ne 4096) { throw 'Editor chunk dimensions mismatch' }
     }
-    $editor = New-Object System.Xml.XmlDocument
-    $editor.Load([IO.Path]::ChangeExtension($a7t,'.a7te'))
-    if ($editor.AnnoEditorLevel.Dimensions.X -ne '4096' -or $editor.SelectNodes('//Chunk').Count -ne 4096) { throw 'Editor chunk dimensions mismatch' }
 }
 $report = [ordered]@{
     Date=(Get-Date -Format 'yyyy-MM-ddTHH:mm:ss')

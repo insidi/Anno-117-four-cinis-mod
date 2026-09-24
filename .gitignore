@@ -42,3 +42,7 @@ gamedata.data
 .DS_Store
 Thumbs.db
 Desktop.ini
+
+# Python bytecode (scripts/cinis_v2)
+__pycache__/
+*.pyc
