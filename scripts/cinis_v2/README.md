@@ -22,10 +22,14 @@ Voraussetzung: **Python 3 mit numpy** im `PATH` (geprüft mit Python 3.12 und nu
 
 Je Kartenvorlage (3377, 44421, 44422) zwei ModOps: `EnlargedTemplateFilename` auf `cinis_four_v2`, `WiggleIterationCount` 0 und `ShrinkWorld` 0 wie bisher, dazu `EnlargedHorizonIslands` mit den Original-Horizontinseln (Positionen mit 4096/2688 skaliert) und den beiden Vulkan-Meshes für jede der vier Ecken.
 
+Die ModOps aus `config/obsidian-modops.xml` werden gemeinsam eingebunden. In 0.3.2 sind es sechs: `ScaleAmountMaximumDistance=0` für Anfangszuteilung (144830) und Eruptionsauffüllung (144837), außerdem feste Min-/Max-Werte für Übersteuerungs- und Forschungsboni in 144837. Alle Ziele betreffen Fertility 145337. Die Kartengenerierung bleibt unverändert.
+
+Für das reine Update eines vorhandenen 0.3.x-Pakets ist kein Kartenneubau und kein numpy nötig: `python scripts/build_obsidian_fix.py --source <0.3.x-Modordner>` nutzt dieselbe XML-Quelle, prüft Bytegleichheit aller Kartendateien und erzeugt ZIP und Prüfsumme. Siehe [Obsidian-Korrektur](../../docs/OBSIDIAN-FIX.md).
+
 ## Format-Hinweise
 
 - `.a7t`-Archive müssen mit zlib-Stufe 1 komprimiert sein (Stream-Header `78 01`). Mit höheren Stufen meldete das Spiel „Failed opening file … gamedata.data“.
 - Die Welt-Datei (`.a7t`) liefert Kollision und Kamerahöhe der Cinis. Die sichtbare Insel kommt aus der Inseldatei.
 - Ein Spielstand speichert Pfad, Positionen und Drehungen der Vorlage, lädt das Terrain aber bei jedem Laden neu aus der `.a7t`.
 
-Die Ausgabe ist deterministisch (Zeitstempel 0). Mit den Eingaben von 0.2.0 entstehen dieselben Dateien wie im im Spiel getesteten Paket 0.3.0.
+Die Kartenausgabe ist deterministisch (Zeitstempel 0). Mit den Eingaben von 0.2.0 entstehen dieselben Kartendateien wie im im Spiel getesteten Paket 0.3.0; `assets.xml` enthält ab 0.3.1 zusätzlich die Obsidian-Korrektur.

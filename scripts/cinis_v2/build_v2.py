@@ -4,7 +4,8 @@ maps:   * data/phil/cinis_four/easy/*.a7t   is rebuilt so the baked continental 
           four Cinis positions stored in existing 0.2.0 savegames (rotation 0).
         * data/phil/cinis_four_v2/<variant>/ is created for new games: Cinis flush in the four corners,
           Rotation90 0/3/2/1, terrain and area IDs rotated accordingly, PlayableArea 268..3828.
-assets: writes data/base/config/export/assets.xml (template path, generator settings, horizon islands).
+assets: writes data/base/config/export/assets.xml (template path, generator settings, horizon islands,
+        plus the obsidian corrections from config/obsidian-modops.xml since 0.3.1).
 
 Usage:
   python build_v2.py maps   <mod folder> <vanilla expanded easy gamedata.data>
@@ -16,6 +17,8 @@ import re
 import shutil
 import struct
 import sys
+from pathlib import Path
+import xml.etree.ElementTree as ET
 
 import numpy as np
 
@@ -314,7 +317,9 @@ def build_assets(source, mod):
     target = mod + '/data/base/config/export'
     os.makedirs(target, exist_ok=True)
     with open(target + '/assets.xml', 'w', encoding='utf-8', newline='\r\n') as f:
-        f.write('<ModOps>\n' + ''.join(ops) + '</ModOps>\n')
+        obsidian = ET.parse(Path(__file__).resolve().parents[2] / 'config/obsidian-modops.xml').getroot()
+        resource_ops = '\n'.join(ET.tostring(op, encoding='unicode') for op in obsidian)
+        f.write('<ModOps>\n' + ''.join(ops) + resource_ops + '\n</ModOps>\n')
     print('PASS: assets.xml written, %d horizon items per template' % len(items))
 
 

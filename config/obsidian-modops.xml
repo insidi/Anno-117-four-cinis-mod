@@ -1,0 +1,27 @@
+<ModOps>
+  <!-- Native game code applies distance scaling only when this value is > 0.
+       Zero skips scaling entirely for both initial deposits and eruptions.
+       See docs/OBSIDIAN-FIX.md for the read-only verification of the current executable.
+       These regional settings also affect other Roman islands. -->
+  <ModOp GUID="144830" Replace="VolcanoEruptionBalancing/ConfigPerRegion/Item[Region='Roman']/InitialLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/ScaleAmountMaximumDistance">
+    <ScaleAmountMaximumDistance>0</ScaleAmountMaximumDistance>
+  </ModOp>
+  <ModOp GUID="144837" Replace="VolcanoPhase/SpawnLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/ScaleAmountMaximumDistance">
+    <ScaleAmountMaximumDistance>0</ScaleAmountMaximumDistance>
+  </ModOp>
+  <!-- Each island otherwise draws its own overdrive/research bonus. Fix both
+       ranges at their original midpoints so equal progression gives equal refills.
+       Base amounts, island multipliers, capacity limits and phase timing stay vanilla. -->
+  <ModOp GUID="144837" Replace="VolcanoPhase/SpawnLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/AdditionalOverdriveAmountMin">
+    <AdditionalOverdriveAmountMin>300</AdditionalOverdriveAmountMin>
+  </ModOp>
+  <ModOp GUID="144837" Replace="VolcanoPhase/SpawnLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/AdditionalOverdriveAmountMax">
+    <AdditionalOverdriveAmountMax>300</AdditionalOverdriveAmountMax>
+  </ModOp>
+  <ModOp GUID="144837" Replace="VolcanoPhase/SpawnLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/TechIncreaseAmountMin">
+    <TechIncreaseAmountMin>400</TechIncreaseAmountMin>
+  </ModOp>
+  <ModOp GUID="144837" Replace="VolcanoPhase/SpawnLimitedLodeFertilities/Item[LimitedLodeFertility='145337']/TechIncreaseAmountMax">
+    <TechIncreaseAmountMax>400</TechIncreaseAmountMax>
+  </ModOp>
+</ModOps>

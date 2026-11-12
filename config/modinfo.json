@@ -1,7 +1,7 @@
 {
   "Anno": 8,
   "ModID": "cinis-four-directions-phil",
-  "Version": "0.3.0",
+  "Version": "0.3.2",
   "Difficulty": "unchanged",
   "Category": { "English": "Map", "German": "Karte" },
   "ModName": {
@@ -9,8 +9,8 @@
     "German": "Vier Cinis - Mehrspieler-Testversion"
   },
   "Description": {
-    "English": "Default Latium DLC map with four Cinis (4096x4096). 0.3.0: baked continental terrain fixed for all four Cinis (ships no longer sail through the copies, camera follows the volcano), map-border ridge removed, horizon islands restored. Existing 0.2.0 games keep their layout and get the terrain fix; new games use the new corner layout with rotated Cinis. All players must use the identical package.",
-    "German": "Standard-Latium-DLC-Karte mit vier Cinis (4096x4096). 0.3.0: Eingebackenes Kontinent-Terrain fuer alle vier Cinis korrigiert (Schiffe fahren nicht mehr durch die Kopien, Kamera folgt dem Vulkan), Kartenrand-Grat entfernt, Horizontinseln wiederhergestellt. Bestehende 0.2.0-Spiele behalten ihr Layout und bekommen die Terrainkorrektur; neue Spiele nutzen das neue Ecken-Layout mit gedrehten Cinis. Alle Spieler muessen dasselbe Paket verwenden."
+    "English": "Four Cinis around Latium. 0.3.2 disables obsidian distance scaling and fixes random refill bonuses at their original midpoints. All four Cinis receive equal amounts with equal progression and available capacity. Research, overdrive, phase factors and capacity limits still apply. Other Roman islands also benefit. Maps are unchanged from 0.3.0. Existing saves receive new stock at the next eruption, not on load. All peers need the same package. Static validation completed; in-game confirmation pending.",
+    "German": "Vier Cinis um Latium. 0.3.2 schaltet die Obsidian-Entfernungsskalierung ab und setzt zufaellige Auffuellboni auf feste Mittelwerte. Alle vier Cinis erhalten bei gleichem Fortschritt und freier Kapazitaet dieselbe Menge. Forschung, Uebersteuerung, Phasenfaktoren und Vorratsgrenzen gelten weiter. Auch andere Latium-Inseln profitieren. Karten unveraendert zu 0.3.0. Bestehende Spiele erhalten neue Vorraete beim naechsten Ausbruch, nicht beim Laden. Alle Mitspieler brauchen dasselbe Paket. Statisch geprueft; Spieltest steht aus."
   },
   "CreatorName": "Phil",
   "GameSetup": {

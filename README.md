@@ -12,7 +12,9 @@ Experimentelle Kartenmod für **Anno 117: Pax Romana**: je eine Cinis-Insel im N
 
 ## Entwicklungsstand
 
-**Version 0.3.0 – Mehrspieler-Prototyp.** Im Spiel getestet am 24.09.2026: In einem laufenden 0.2.0-Mehrspielerspielstand (Easy) sind die drei Kopien jetzt fest (Schiffe stoppen an der Küste, die Kamera folgt den Vulkanen); in einem neuen Spiel stehen alle vier Cinis gedreht in den Ecken. Vulkanausbrüche, Quests und Mehrspieler-Synchronisation über längere Zeit sind noch nicht geprüft.
+**Version 0.3.2 – Gleichmäßige Obsidian-Auffüllung.** Süd hatte im untersuchten 0.3.0-Spielstand kein Obsidian; Ost und West erhielten nur winzige Auffüllungen. 0.3.2 schaltet die Entfernungsskalierung vollständig ab und ersetzt zufällige Auffüllboni durch feste Mittelwerte. Alle vier Cinis erhalten bei gleichem Forschungs-/Übersteuerungsstand und Phasenfaktor dieselbe Menge, begrenzt durch ihre freie Kapazität. Das betrifft auch die übrigen Latium-Inseln. Der gemeinsame Spieltest steht noch aus. Siehe [Befunde und Testablauf](docs/OBSIDIAN-FIX.md).
+
+Die Kartendateien entsprechen unverändert 0.3.0. Dessen Terrainkorrektur und gedrehte Ecken wurden am 24.09.2026 im Spiel geprüft. Quests und Mehrspieler-Synchronisation über längere Zeit sind weiterhin offen.
 
 - Standard/Default-Latium in allen drei Inselgrößenvarianten.
 - Karte von 2688 × 2688 auf 4096 × 4096 Felder erweitert.
@@ -20,7 +22,7 @@ Experimentelle Kartenmod für **Anno 117: Pax Romana**: je eine Cinis-Insel im N
 - Das eingebackene Kontinent- und Vulkanterrain der Weltdatei (Kollision, Kamerahöhe) liegt an allen vier Cinis. In 0.2.0 fehlte es bei den Kopien.
 - Bestehende 0.2.0-Spielstände laden weiter und bekommen die Terrainkorrektur, behalten aber ihr altes Layout (siehe [Testanleitung](docs/TESTANLEITUNG.md)).
 - Mehrspieler in den Mod-Metadaten aktiviert. Alle Teilnehmer müssen dasselbe Modpaket und dieselbe Spielversion verwenden.
-- Vulkan- und Queststeuerung bleiben unverändert. Vier unabhängige Ausbruchszyklen sind **nicht nachgewiesen**.
+- Ausbruchszeiten, Grundmengen, Vorratsobergrenzen und Queststeuerung bleiben unverändert. Geändert werden zwei Entfernungswerte und vier Grenzen der zufälligen Obsidianboni. Vier unabhängige Ausbruchszyklen sind **nicht nachgewiesen**.
 - Vulkan-DLC erforderlich. Keine Kampagnenunterstützung.
 
 [Layoutvorschau](docs/layout.html) · [Installation und Testablauf](docs/TESTANLEITUNG.md) · [Technischer Stand](research/STATUS.md)
@@ -29,24 +31,27 @@ Die HTML-Vorschau lokal herunterladen und im Browser öffnen; GitHub zeigt die D
 
 ## Download
 
-Das fertige Modpaket liegt als ZIP bei den [Releases](https://github.com/insidi/Anno-117-four-cinis-mod/releases). Aktuelle Version: [v0.3.0](https://github.com/insidi/Anno-117-four-cinis-mod/releases/tag/v0.3.0). Neben dem ZIP liegt eine `.sha256`-Datei zum Prüfen des Downloads. Das Git-Repository selbst enthält nur Quellcode und Dokumentation; die Kartendateien werden nicht eingecheckt.
+Das vollständige Modpaket liegt bei den [Releases](https://github.com/insidi/Anno-117-four-cinis-mod/releases): **[v0.3.2](https://github.com/insidi/Anno-117-four-cinis-mod/releases/tag/v0.3.2)** mit ZIP und `.sha256`-Prüfsumme. Das Git-Repository selbst enthält nur Quellcode und Dokumentation; die Kartendateien werden nicht eingecheckt.
 
 ## Installation
 
-1. Anno 117 schließen und das ZIP aus dem Release entpacken.
+1. Anno 117 schließen und das ZIP der gewünschten Version entpacken.
 2. Den Ordner `cinis-four-directions` in den eigenen Dokumente-Ordner unter `Anno 117 - Pax Romana/mods/` kopieren.
 3. Prüfen, dass `modinfo.json` direkt im Modordner liegt, und die Mod im Spiel aktivieren.
-4. Ein neues freies Spiel mit **Standard/Default-Latium** und aktiviertem Vulkan-DLC starten.
+4. Ein vorhandenes Spiel laden oder ein neues freies Spiel mit **Standard/Default-Latium** und aktiviertem Vulkan-DLC starten.
 
-Beim Update von 0.2.0 den alten Modordner vorher löschen; ein vorhandener 0.2.0-Spielstand lädt danach weiter.
+Beim Update den bisherigen Modordner komplett ersetzen. Bestehende Spielstände behalten ihr Layout. 0.3.2 setzt den Obsidianvorrat beim Laden nicht zurück: Die geänderte Auffüllung muss beim nächsten Ausbruch geprüft werden.
 
-Für Mehrspieler installiert jeder Teilnehmer dasselbe ZIP. Der Host erstellt eine neue Partie. Den ersten Versuch mit einem separaten Testspielstand durchführen; die vollständigen Prüfschritte stehen in der [Testanleitung](docs/TESTANLEITUNG.md).
+Für Mehrspieler installiert jeder Teilnehmer dasselbe ZIP und startet das Spiel neu. Den ersten Versuch mit einem separaten Testspielstand durchführen; die vollständigen Prüfschritte stehen in der [Testanleitung](docs/TESTANLEITUNG.md).
 
 ## Repository-Struktur
 
 | Pfad | Inhalt |
 | --- | --- |
 | `config/modinfo.json` | Version, Mod-ID und Mehrspielerfreigabe |
+| `config/obsidian-modops.xml` | Gemeinsame Quelle der sechs Obsidian-Korrekturen |
+| `scripts/build_obsidian_fix.py` | Vollständiges Update aus einem vorhandenen 0.3.x-Paket, ohne Kartenneubau |
+| `scripts/test_obsidian_balance.py` | Regressionstests für Gleichverteilung, Boni, Kapazitätsgrenzen und Paket-Update |
 | `scripts/MapBuild/` | C#-Werkzeug zum Bearbeiten, Verpacken und Prüfen der Kartendaten |
 | `scripts/cinis_v2/` | Python-Build-Stufe 2: Weltdateien für beide Layouts und `assets.xml` ([Beschreibung](scripts/cinis_v2/README.md)) |
 | `scripts/*.ps1` | Kompilierung, Mod-Build, Paketierung, Validierung und Vorschau |
@@ -57,6 +62,25 @@ Für Mehrspieler installiert jeder Teilnehmer dasselbe ZIP. Der Host erstellt ei
 | `dist/` | Erzeugter Modordner und ZIP-Pakete; von Git ausgeschlossen |
 
 ## Lokal bauen
+
+Für das **Update 0.3.2** genügt Python 3.11 oder neuer ohne Zusatzpakete sowie ein installiertes oder entpacktes vollständiges 0.3.x-Modpaket:
+
+```powershell
+python scripts/build_obsidian_fix.py --source "$env:USERPROFILE/Documents/Anno 117 - Pax Romana/mods/cinis-four-directions"
+```
+
+Das Skript schreibt den Modordner, das vollständige ZIP und die SHA256-Prüfsumme nach `dist/`. Es ändert weder die Eingabemod noch Spielstände. Es prüft alle übernommenen Kartendateien auf Bytegleichheit und jedes ZIP-Mitglied gegen den erzeugten Ordner. Nur die Mod-Assets, Metadaten und Anleitung werden aktualisiert. Für die anschließende Prüfung gegen die eigenen aktuellen Spieldaten:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Validate-Cinis.ps1 -AssetsPath "<extrahierte aktuelle assets.xml>"
+python scripts/test_obsidian_balance.py
+```
+
+Die Validierung benötigt `tools/package/external/xmltest2.exe` aus den Anno Modding Tools. Ihr Bericht liegt unter `research/validation.json`, der Paketvergleich unter `research/obsidian-package-check.json`.
+
+### Vollständige Kartenpipeline aus 0.3.0
+
+Die folgende Pipeline wird für den Obsidian-Fix nicht benötigt. Sie setzt zusätzlich die MapBuild-Quellen und alle unten aufgeführten Werkzeuge und Eingabedaten voraus.
 
 Der Build setzt **Windows, PowerShell und vorbereitete lokale Eingabedaten** voraus. Ein frischer Git-Clone ist noch nicht sofort baubar: Die Skripte laden keine Abhängigkeiten herunter und extrahieren die Spieldaten nicht automatisch.
 
@@ -91,13 +115,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Make-Preview.ps1
 
 `ExecutionPolicy Bypass` gilt hier nur für den jeweiligen PowerShell-Prozess. Die Skripte installieren die Mod nicht im Spielverzeichnis.
 
-Sind die Karten bereits gebaut und wurden nur Metadaten oder die Testanleitung geändert, genügt zur neuen Paketierung:
-
-```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/Package-Cinis.ps1
-```
-
-Das ZIP und seine SHA256-Prüfsumme liegen anschließend in `dist/`. Die Version stammt aus `config/modinfo.json`. Für eine neue Version werden beide Dateien als Anhang an ein Release mit dem Tag `v<Version>` gehängt.
+Für die Paketierung des Obsidian-Updates den oben beschriebenen Python-Build verwenden. Die Version stammt aus `config/modinfo.json`. Für eine Veröffentlichung werden ZIP und Prüfsumme als Anhang an ein Release mit dem Tag `v<Version>` gehängt.
 
 ## Validierung
 
@@ -105,7 +123,7 @@ Der Build prüft die FileDB-Daten durch erneutes Einlesen und vergleicht die Nut
 
 `build_v2.py` prüft, dass Medium und Hard keine eingebackene Höhe haben und dass alle Inselplätze im neuen Spielbereich liegen, ohne eine Cinis zu überdecken.
 
-`Validate-Cinis.ps1` wendet die XML-Patches mit `xmltest2` an und prüft, dass genau die drei vorgesehenen Karten-Assets geändert werden, die Horizontinseln vollständig sind und beide Vorlagenpfade im Paket liegen. Der lokale Bericht liegt unter `research/validation.json`.
+`Validate-Cinis.ps1` wendet die XML-Patches mit `xmltest2` an und prüft, dass genau die drei vorgesehenen Karten-Assets und sechs Obsidianwerte geändert werden. Alle übrigen Vulkanfelder müssen unverändert bleiben, die Horizontinseln vollständig sein und beide Vorlagenpfade im Paket liegen. `test_obsidian_balance.py` prüft die gepatchten Assets anhand des aus der lokalen Spielroutine abgeleiteten Rechenmodells. Der lokale Bericht liegt unter `research/validation.json`.
 
 Diese Prüfungen ersetzen keinen gemeinsamen Spieltest auf Host und Clients.
 

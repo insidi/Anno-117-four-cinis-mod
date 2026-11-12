@@ -1,8 +1,18 @@
-# Vier Cinis - Mehrspieler-Testversion 0.3.0
+# Vier Cinis - Mehrspieler-Testversion 0.3.2
 
-Experimenteller Kartenprototyp fuer Anno 117: Standard-Latium (alle drei Inselgroessen) mit 4096 x 4096 Feldern und vier Cinis. Version 0.3.0 laeuft mit bestehenden 0.2.0-Spielstaenden und mit neuen Spielen. Der Modordner heisst weiterhin `cinis-four-directions`, die ModID bleibt `cinis-four-directions-phil`.
+Experimenteller Kartenprototyp fuer Anno 117: Standard-Latium (alle drei Inselgroessen) mit 4096 x 4096 Feldern und vier Cinis. Version 0.3.2 verwendet unveraenderte Karten aus 0.3.0 und sorgt fuer gleiche Obsidianzuteilung bei gleichen Voraussetzungen. Bestehende Spielstaende behalten ihr Layout. Der Modordner heisst weiterhin `cinis-four-directions`, die ModID bleibt `cinis-four-directions-phil`.
 
 Mehrspieler ist in `modinfo.json` aktiviert. Alle Spieler muessen exakt dasselbe Paket und dieselbe Spielversion verwenden.
+
+## Was 0.3.2 aendert
+
+Im untersuchten 0.3.0-Spielstand hatte Sued kein Obsidian, Ost und West erhielten nur sehr kleine Vorraete. 0.3.2 setzt beide Entfernungswerte auf 0. Die lokale Spielroutine ueberspringt damit die Entfernungsskalierung vollstaendig. Zusaetzlich sind Uebersteuerungsboni fest 300 statt zufaellig 250..350 und Forschungsboni fest 400 statt 350..450, jeweils vor den weiteren Multiplikatoren. Auch andere Latium-Inseln profitieren davon. Grundmengen, Vorratsobergrenzen, Fortschritt und Ausbruchszeiten bleiben erhalten.
+
+Gleichmaessig bedeutet: gleiche Zuteilung bei gleichem Forschungs-/Uebersteuerungsstand und Phasenfaktor. Unterschiedlicher Abbau oder eine schon fast volle Insel kann trotzdem zu anderen Endbestaenden fuehren. Es wird nicht bei jedem Ausbruch zwangsweise bis zur Obergrenze aufgefuellt.
+
+Die XML-Anwendung und Paketdaten sind statisch pruefbar; die Wirkung auf alle vier Inseln und die Mehrspieler-Synchronisation muessen noch im Spiel bestaetigt werden. Details: [OBSIDIAN-FIX.md](OBSIDIAN-FIX.md).
+
+Ein vorhandener Spielstand bekommt beim Laden nicht sofort neue Vorraete. Die neue Auffuellung wird erst beim naechsten Ausbruch erwartet. Ob die Engine dabei auch einen bisher ganz fehlenden Obsidian-Eintrag auf Sued ergaenzt, ist noch zu pruefen.
 
 ## Was 0.3.0 gegenueber 0.2.0 aendert
 
@@ -15,12 +25,22 @@ Die Kontinent- und Vulkanlandmasse der Cinis ist in der Weltdatei (`.a7t`, Hoehe
 ## Installation
 
 1. Spiel auf allen Rechnern schliessen und den Spielstand sichern.
-2. Alle Spieler bekommen exakt dasselbe ZIP der Version 0.3.0. Neben dem ZIP liegt dessen SHA256-Pruefsumme.
+2. Alle Spieler bekommen exakt dasselbe ZIP der Version 0.3.2. Neben dem ZIP liegt dessen SHA256-Pruefsumme.
 3. Den Ordner `Dokumente/Anno 117 - Pax Romana/mods/cinis-four-directions` komplett durch den Ordner aus dem ZIP ersetzen. Keine zweite Kopie behalten. `modinfo.json` muss direkt im Modordner liegen.
-4. Spiel starten und `Dokumente/Anno 117 - Pax Romana/mods/mod-loader.log` pruefen: Version 0.3.0 geladen, keine Warnungen.
+4. Spiel starten und `Dokumente/Anno 117 - Pax Romana/mods/mod-loader.log` pruefen: Version 0.3.2 geladen, keine Warnungen.
 5. Fuer ein neues Spiel: freies Spiel, Latium, Kartentyp **Standard/Default**, Vulkan-DLC aktiv. Andere Kartentypen werden nicht veraendert. Keine Kampagnenunterstuetzung.
 
 ## Testablauf
+
+Obsidian in einem bestehenden Spielstand:
+
+1. Separaten Testspielstand anlegen; Obsidianabbau fuer den Vergleich pausieren.
+2. **Nord, Ost, Sued und West** einzeln pruefen und den Obsidianvorrat der Insel vor dem Ausbruch notieren. Gemeint ist das Vorkommen, nicht das Warenlager.
+3. Forschungs-/Uebersteuerungsstand und freie Kapazitaet je Insel festhalten. Nach der naechsten tatsaechlichen Eruptionsphase alle vier Werte erneut notieren und die Zuwachsmengen vergleichen. Bei gleichen Voraussetzungen muessen sie gleich sein. Sued muss ein positives Vorkommen erhalten. Eine volle Insel nimmt nichts mehr auf; bei wenig freiem Platz wird die Zuteilung begrenzt.
+4. Gemeinsam speichern, neu laden und die Werte zwischen Host und Clients vergleichen.
+5. Fehlt Sued weiterhin, den Spielstand nach dem Ausbruch aufbewahren. Die nachtraegliche Anlage eines fehlenden Eintrags ist noch nicht im Spiel nachgewiesen.
+
+Neues Spiel mit 0.3.2: Zusaetzlich sofort nach der Weltgenerierung auf **allen vier Cinis** den Anfangsvorrat pruefen. Nach der geprueften Berechnung sind jeweils 120 zu erwarten (100 Grundmenge x 1,2 Inselgroessenfaktor). Danach denselben Ausbruchstest durchfuehren. Ohne Zusatzboni und bei genuegend Platz ergeben sich 420 bei Faktor 0,5 bzw. 840 bei Faktor 1. Diese Rechenwerte sind noch im Spiel zu bestaetigen.
 
 Bestehender 0.2.0-Spielstand:
 

@@ -51,6 +51,28 @@ Installation: C:\Program Files (x86)\Steam\steamapps\common\Anno 117 - Pax Roman
 - Build: zweite Stufe `scripts/cinis_v2/build_v2.py` (Python 3 + numpy), aufgerufen von `Build-Cinis.ps1`. Mit den 0.2.0-Eingaben byte-identisch zum getesteten Paket.
 - Spieltest: laufender 0.2.0-Mehrspielerspielstand (Easy) mit 0.3.0 geladen, Kopien fest, Kamera folgt den Vulkanen; Rueckseiten im alten Layout weiterhin durchfahrbar. Neues Spiel: alle vier Ecken korrekt gedreht.
 
+## Version 0.3.1: Obsidian (12.11.2026)
+
+- Nutzer meldet fehlendes Obsidian und ausbleibende Auffuellung auf mehreren Cinis; Nord funktioniert. Neues Spiel auf aktueller Spielversion.
+- Installierte Mod 0.3.0 und gespeicherter Vorlagenpfad `cinis_four_v2/easy` bestaetigt. Die Positionen und Drehungen aller vier Cinis stimmen. Spielstaende nur gelesen, keine Installation oder Spielstaende veraendert.
+- Read-only-Auswertung der LimitedLodeComponent, Fertility 145337: vor dem ersten Ausbruch Nord 108, Ost 1, Sued ohne Eintrag, West 10. Nach dem Ausbruch Nord 432 (zwischenzeitlich Abbau), Ost 8, Sued weiterhin ohne Eintrag, West 49. Ost/West werden also aufgefuellt, aber viel zu wenig. Zuordnung ueber AreaManager und Objektpositionen: 8321=N, 8385=O, 8449=S, 8513=W.
+- Einzelner VolcanoEruptionManager in der Session; nach dem Ausbruch Phase 145212. Die gespeicherten Phasenwechsel belegen, dass der Vergleich einen tatsaechlichen Ausbruch umfasst.
+- Aktuelle `config.rda` neu gelesen; Patcharchiv 300 auf Assets-/Templates-Overrides geprueft. `ScaleAmountMaximumDistance=3500` in InitialLimitedLodeFertilities von 144830 (Roman) und SpawnLimitedLodeFertilities von Eruptionsphase 144837. Beides fuer Obsidian 145337. Die Distanzskalierung vom Referenzvulkan ist die durch Konfiguration und Bestandsverteilung gestuetzte Ursache; die native Berechnungsfunktion wurde nicht disassembliert.
+- Fix: beide Distanzwerte auf 1000000. Endlicher Wert, ueber 100 Kartendiagonalen, keine unbewiesene 0/-1-Sonderbehandlung. Die Aenderung betrifft auch die uebrigen Latium-Inseln. Grundmengen 100/700, Inselgroessenmultiplikatoren, Obergrenzen, Forschung und Phasenlaengen unveraendert.
+- Gemeinsame Patchquelle `config/obsidian-modops.xml`, eingebunden in den vollen Assets-Build und `scripts/build_obsidian_fix.py`. Letzteres erstellt mit Python-Standardbibliothek ein komplettes 0.3.1-Paket aus 0.3.0, ohne die Karten neu zu erzeugen oder die Eingabemod zu aendern.
+- Pruefungen: echter ModOp-Test gegen aktuelle Assets (drei Karten-Assets plus exakt zwei Obsidian-Distanzfelder); SHA256-Vergleich aller uebernommenen Kartendateien und ZIP-Inhalte. Berichte: `research/validation.json`, `research/obsidian-package-check.json`.
+- Laufzeit noch offen: Anfangsvorraete eines neuen Spiels, normale Auffuellung aller vier Cinis beim naechsten Ausbruch, Ergaenzung des fehlenden Sued-Eintrags in bestehenden Spielen, Host/Client-Gleichheit und Speichern/Laden. Keine sofortige Bestandsmigration im Save. Details: `docs/OBSIDIAN-FIX.md`.
+
+## Version 0.3.2: gleiche Auffuellmengen (12.11.2026)
+
+- Anforderung: alle vier Cinis gleichmaessig auffuellen. 0.3.1 reduzierte den Entfernungseinfluss nur und liess die zufaelligen Bonusmengen unveraendert.
+- Native Spielroutine jetzt lesend untersucht, ohne Spielprozess oder Binaerdatei zu veraendern. `Anno117.exe` SHA256: `7a95636a8c8818e3e9be25d08753cc84ce64221e862f8f54a26afc4013493e6f`.
+- Beide XML-Deserializer ordnen `ScaleAmountMaximumDistance` dem Item-Feld +8 zu (VA 0x142bc4861 / 0x142bc7a73). Initialisierung bei 0x142d25f30 und Eruption bei 0x142d2de18 vergleichen dieses Float-Feld mit 0 und ueberspringen bei <=0 die gesamte Distanzrechnung. Bei positiven Werten: Betrag mit clamp(1 - Entfernung / Reichweite, 0, 1) multiplizieren und ganzzahlig abschneiden. Damit ist **0 der nachgewiesene Abschalter**, keine Naeherung durch eine grosse Zahl.
+- Eruption zieht Bonusmengen pro Insel aus Min/Max vor der Entfernungsrechnung (0x142d2ddb0 / 0x142d2de00). Fix: Uebersteuerung 300/300 statt 250/350; Forschung 400/400 statt 350/450. Fortschritt, erster Phasenfaktor 0,5, Grundmengen, Kapazitaeten und Zeiten bleiben erhalten. Unterschiedlicher Fortschritt, freier Platz oder Verbrauch kann weiterhin unterschiedliche Endbestaende ergeben.
+- Insgesamt sechs Ressourcen-ModOps auf zwei Vulkan-Assets plus sechs unveraenderte Karten-ModOps. Alle 24 Kartendateien und beide Layoutpfade weiterhin bytegleich zu 0.3.0.
+- Erwartete Rechenwerte fuer gleiche Cinis: Anfangsvorrat 120; ohne Boni Auffuellung 420 bei Phasenfaktor 0,5 bzw. 840 bei Faktor 1, jeweils durch die freie Kapazitaet begrenzt. `scripts/test_obsidian_balance.py` prueft das aus der nativen Routine abgeleitete Modell gegen die mit xmltest2 gepatchten Assets und den Update-Pfad. Diese Tests ersetzen keinen Laufzeittest.
+- Native Auszuege nur lokal in `research/obsidian-native-evidence.txt`. Nicht Teil von Git oder Release. Oeffentliche Erlaeuterung und Testschritte in `docs/OBSIDIAN-FIX.md`.
+
 ## Noch offen: Laufzeittest
 - Neue Spiele mit Medium und Hard gezielt pruefen (keine eingebackene Hoehe; SessionSettings/PlayableArea der Weltdatei ist dort noch 20..4076, in der .a7tinfo 268..3828).
 - Ausrichtung der Horizont-Vulkan-Meshes in allen vier Ecken pruefen.
