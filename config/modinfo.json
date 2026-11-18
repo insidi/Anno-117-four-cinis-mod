@@ -1,7 +1,7 @@
 {
   "Anno": 8,
   "ModID": "cinis-four-directions-phil",
-  "Version": "0.3.2",
+  "Version": "0.3.3",
   "Difficulty": "unchanged",
   "Category": { "English": "Map", "German": "Karte" },
   "ModName": {
@@ -9,8 +9,8 @@
     "German": "Vier Cinis - Mehrspieler-Testversion"
   },
   "Description": {
-    "English": "Four Cinis around Latium. 0.3.2 disables obsidian distance scaling and fixes random refill bonuses at their original midpoints. All four Cinis receive equal amounts with equal progression and available capacity. Research, overdrive, phase factors and capacity limits still apply. Other Roman islands also benefit. Maps are unchanged from 0.3.0. Existing saves receive new stock at the next eruption, not on load. All peers need the same package. Static validation completed; in-game confirmation pending.",
-    "German": "Vier Cinis um Latium. 0.3.2 schaltet die Obsidian-Entfernungsskalierung ab und setzt zufaellige Auffuellboni auf feste Mittelwerte. Alle vier Cinis erhalten bei gleichem Fortschritt und freier Kapazitaet dieselbe Menge. Forschung, Uebersteuerung, Phasenfaktoren und Vorratsgrenzen gelten weiter. Auch andere Latium-Inseln profitieren. Karten unveraendert zu 0.3.0. Bestehende Spiele erhalten neue Vorraete beim naechsten Ausbruch, nicht beim Laden. Alle Mitspieler brauchen dasselbe Paket. Statisch geprueft; Spieltest steht aus."
+    "English": "Four Cinis around central Latium. 0.3.3 aligns the playable boundary of all four corners with the original Cinis on Anno 117 patch 3.0.1. All instances use the current patched original island. Terrain, positions, rotations, GUIDs and the 0.3.2 obsidian rules are preserved. Existing savegames may retain their saved playable boundary; no save files are modified. All multiplayer peers need the same mod and game version. Static checks only; in-game and multiplayer confirmation pending.",
+    "German": "Vier Cinis um Latium. 0.3.3 gleicht die Spielgrenze aller vier Ecken an die Original-Cinis unter Anno 117 Patch 3.0.1 an. Alle Instanzen verwenden die aktuell gepatchte Originalinsel. Terrain, Positionen, Drehungen, GUIDs und die Obsidianregeln aus 0.3.2 bleiben erhalten. Bestehende Spielstaende koennen ihre gespeicherte Spielgrenze behalten; keine Spielstaende werden bearbeitet. Alle Mitspieler brauchen dieselbe Mod- und Spielversion. Statisch geprueft; Ingame- und Mehrspieler-Bestaetigung stehen aus."
   },
   "CreatorName": "Phil",
   "GameSetup": {

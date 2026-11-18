@@ -4,7 +4,9 @@ Run Validate-Cinis.ps1 first, then: python scripts/test_obsidian_balance.py
 The arithmetic follows the read-only native investigation in research/STATUS.md.
 Only the Python standard library is needed.
 """
+import argparse
 import copy
+import json
 import math
 from pathlib import Path
 import struct
@@ -14,6 +16,9 @@ import xml.etree.ElementTree as ET
 from build_obsidian_fix import apply_obsidian_ops
 
 ROOT = Path(__file__).resolve().parents[1]
+VERSION = json.loads((ROOT / 'config/modinfo.json').read_text(encoding='utf-8'))['Version']
+MOD = ROOT / f'dist/v{VERSION}/cinis-four-directions'
+PATCHED_ASSETS = ROOT / 'research/patched-assets.xml'
 DISTANCES = (0, 384, 3328, 3500, math.hypot(3328, 3328), math.hypot(4096, 4096))
 
 
@@ -38,7 +43,7 @@ def signature(node):
 class ObsidianBalance(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        root = ET.parse(ROOT / 'research/patched-assets.xml').getroot()
+        root = ET.parse(PATCHED_ASSETS).getroot()
         assets = {a.findtext('Values/Standard/GUID', '').strip(): a for a in root.iter('Asset')}
         config = assets['144830'].find('Values/VolcanoEruptionBalancing/ConfigPerRegion/Item')
         cls.initial = config.find('InitialLimitedLodeFertilities/Item')
@@ -46,7 +51,7 @@ class ObsidianBalance(unittest.TestCase):
         cls.fertility = assets['145337'].find('Values/Fertility')
         cls.size_factor = float(config.findtext('LimitedLodeIslandSizeMultiplicator/Continental/Value'))
         cls.fragment = ET.parse(ROOT / 'config/obsidian-modops.xml').getroot()
-        cls.packaged = ET.parse(ROOT / 'dist/cinis-four-directions/data/base/config/export/assets.xml').getroot()
+        cls.packaged = ET.parse(MOD / 'data/base/config/export/assets.xml').getroot()
 
     def refill(self, distance, overdrive=0, research=0, factor=1):
         base = int(self.eruption.findtext('LimitedLodeBaseAmount'))
@@ -125,4 +130,9 @@ class ObsidianBalance(unittest.TestCase):
 
 
 if __name__ == '__main__':
-    unittest.main(verbosity=2)
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--mod', type=Path, default=MOD)
+    parser.add_argument('--assets', type=Path, default=PATCHED_ASSETS)
+    args, remaining = parser.parse_known_args()
+    MOD, PATCHED_ASSETS = args.mod, args.assets
+    unittest.main(argv=[__file__] + remaining, verbosity=2)

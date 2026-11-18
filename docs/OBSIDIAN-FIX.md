@@ -1,6 +1,8 @@
-# Gleichmäßige Obsidian-Auffüllung – 0.3.2
+# Gleichmäßige Obsidian-Auffüllung – seit 0.3.2
 
 Alle vier Cinis sollen bei gleichen Voraussetzungen dieselbe Obsidianmenge bekommen. Version 0.3.2 schaltet deshalb die Entfernungsskalierung vollständig ab und ersetzt zufällige Zusatzmengen durch feste Mittelwerte.
+
+In **0.3.3** bleiben diese sechs Werte unverändert. Ihre Anwendung und die native Behandlung von `0` wurden erneut gegen Patch **3.0.1** geprüft; der Spiel-/Mehrspielertest steht weiterhin aus.
 
 ## Nachgewiesener Fehler
 
@@ -37,7 +39,7 @@ Für jede Cinis ergeben sich rechnerisch 120 Anfangsvorrat (100 × 1,2). Ohne Zu
 - Die Änderung gilt auch für die übrigen Latium-Inseln: Auch dort entfällt der Entfernungseinfluss.
 - Anfangs- und Ausbruchsgrundmenge, Vorratsobergrenzen, Fortschritt und Phasenlängen bleiben unverändert. Forschungs- und Übersteuerungsboni verwenden jetzt feste Mengen.
 - Ein Ausbruch bedeutet weiterhin nicht zwangsläufig einen vollen Vorrat: Das Original berücksichtigt unter anderem den ersten Ausbruch und Forschung. Diese Mod entfernt keine Verbrauchsprüfung und erzeugt kein unendliches Obsidian.
-- Keine neuen Skripte, Timer oder Zufallsentscheidungen. Karten, Positionen, Drehungen und Terrain bleiben bytegleich zu 0.3.0.
+- Keine neuen Skripte, Timer oder Zufallsentscheidungen. Positionen, Drehungen und Terrain bleiben erhalten. 0.3.3 ändert ausschließlich vier Spielgrenzen-Felder der Kartendaten; siehe [Patch-Kompatibilität](https://github.com/insidi/Anno-117-four-cinis-mod/blob/main/docs/PATCH-KOMPATIBILITAET.md).
 
 ## Warum `0` funktioniert
 
@@ -47,7 +49,7 @@ Die Zuordnung des XML-Felds und beide Verzweigungen sind für die untersuchte au
 
 ## Installieren und im vorhandenen Spiel testen
 
-1. Auf **allen beteiligten Rechnern** das Spiel beenden und dasselbe ZIP `cinis-four-directions-v0.3.2.zip` entpacken.
+1. Auf **allen beteiligten Rechnern** das Spiel beenden und dasselbe ZIP `cinis-four-directions-v0.3.3.zip` entpacken.
 2. Den bisherigen Modordner `cinis-four-directions` durch den gleichnamigen Ordner aus dem ZIP ersetzen. Nicht als zweite Mod daneben installieren.
 3. Den vorhandenen Spielstand laden und einen separaten Testspielstand anlegen. Ein Neustart der Partie ist für die geänderten Ausbruchsparameter nicht vorgesehen.
 4. Für Nord, Ost, Süd und West Vorkommen, freie Kapazität und Forschungs-/Übersteuerungsstand notieren. Zur Vergleichbarkeit den Obsidianabbau pausieren.
@@ -61,4 +63,4 @@ Falls Süd weiterhin keinen Eintrag erhält, den Spielstand **nach** dem Ausbruc
 
 Der echte ModOp-Test prüft gegen die aktuellen lokalen Spiel-Assets: drei Karten-Assets und genau sechs Obsidianfelder in zwei weiteren Assets; alle übrigen Vulkanfelder unverändert. Regressionstests prüfen die gepatchten Werte anhand des aus der lokalen Spielroutine abgeleiteten Rechenmodells: Entfernungen bis zur Kartendiagonale, erste und spätere Eruption, feste Boni, Kapazitätsgrenzen und Updates ohne doppelte ModOps. Sie führen das Spiel nicht aus.
 
-Der Paket-Build vergleicht alle 24 Kartendateien per SHA256 mit 0.3.0 und prüft jedes ZIP-Mitglied. Die Wirkung auf alle vier Inseln, Süd im bestehenden Spielstand und die Mehrspieler-Synchronisation sind erst nach dem beschriebenen Spieltest bestätigt.
+Der Paket-Build prüft jedes ZIP-Mitglied. In 0.3.3 bleiben 14 von 18 Kartenkomponenten bytegleich zum festgelegten 0.3.2-Paket; in den vier anderen darf sich nur die Spielgrenze ändern. Die sechs Entwicklungsdateien `*.layout.json` werden nicht mehr mitgeliefert. Die Wirkung auf alle vier Inseln, Süd im bestehenden Spielstand und die Mehrspieler-Synchronisation sind erst nach dem beschriebenen Spieltest bestätigt.

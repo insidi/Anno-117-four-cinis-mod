@@ -7,16 +7,16 @@ param(
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 Set-Location $root
-if (-not $ModPath) { $ModPath = Join-Path $root 'dist/cinis-four-directions' }
+if (-not $ModPath) {
+    $version = (Get-Content -LiteralPath (Join-Path $root 'config/modinfo.json') -Raw -Encoding UTF8 | ConvertFrom-Json).Version
+    $ModPath = Join-Path $root ('dist/v' + $version + '/cinis-four-directions')
+}
 if (-not $XmlTestPath) { $XmlTestPath = Join-Path $root 'tools/package/external/xmltest2.exe' }
 if (-not $AssetsPath) {
-    $AssetsPath = Join-Path $root 'research/current/config.rda/data/base/config/export/assets.xml'
-    if (-not (Test-Path -LiteralPath $AssetsPath)) {
-        $AssetsPath = Join-Path $root 'research/config/data/base/config/export/assets.xml'
-    }
+    $AssetsPath = Join-Path $root 'research/compatibility-audit/current-assets.xml'
 }
 $mod = $ModPath
-$metadata = Get-Content ($mod + '/modinfo.json') -Raw | ConvertFrom-Json
+$metadata = Get-Content ($mod + '/modinfo.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if ($metadata.GameSetup.Multiplayer -ne $true) { throw 'Multiplayer must be enabled' }
 $sourcePath = $AssetsPath
 $patchedPath = Join-Path $root 'research/patched-assets.xml'
@@ -100,7 +100,7 @@ $report = [ordered]@{
     OtherVolcanoFieldsUnchanged=$true
     PatchWarnings=0
     CheckedVariants=3
-    MapData='0.3.2 reuses 0.3.0 map data; see obsidian-package-check.json for SHA256 comparison'
+    MapData='See compatibility-audit/audit.json and dist/build-v<Version>.json for terrain, boundary and file comparisons'
     RuntimeTest='NOT RUN - host/client synchronization, world generation, settlement, eruptions, quests, save/reload require in-game testing'
 }
 $report | ConvertTo-Json -Depth 4 | Set-Content research/validation.json -Encoding UTF8

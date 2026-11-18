@@ -1,0 +1,11 @@
+{
+  "base_version": "0.3.2",
+  "base_url": "https://github.com/insidi/Anno-117-four-cinis-mod/releases/download/v0.3.2/cinis-four-directions-v0.3.2.zip",
+  "base_sha256": "c98437143dbe217719552deabcd0c1483f24836a164193f0ff73983dbe4da4af",
+  "checked_game_version": "3.0.1",
+  "checked_steam_build": "26607411",
+  "checked_executable_sha256": "12c74b5c106f9c8b29a47b2952dd25356e603ec92f99bf50fbb23ed6c67cf45e",
+  "previous_playable_area": [268, 268, 3828, 3828],
+  "playable_area": [248, 248, 3848, 3848],
+  "release_prerelease": true
+}

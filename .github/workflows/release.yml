@@ -1,0 +1,56 @@
+name: Build and release mod
+
+on:
+  push:
+    tags: ['v*.*.*']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mod-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Build complete installable ZIP
+        id: build
+        shell: bash
+        run: |
+          args=()
+          if [[ "$GITHUB_REF_TYPE" == "tag" ]]; then
+            args=(--tag "$GITHUB_REF_NAME")
+          fi
+          python scripts/build_release.py "${args[@]}"
+          python -c 'import json, os; version=json.load(open("config/modinfo.json"))["Version"]; print("version=" + version, file=open(os.environ["GITHUB_OUTPUT"], "a"))'
+      - name: Verify maps, XML, JSON, identities and ZIP
+        run: python scripts/test_release.py
+      - name: Upload installable artifact and verification reports
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: cinis-four-directions-v${{ steps.build.outputs.version }}
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 0
+          path: |
+            dist/cinis-four-directions-v${{ steps.build.outputs.version }}.zip
+            dist/cinis-four-directions-v${{ steps.build.outputs.version }}.zip.sha256
+            dist/build-v${{ steps.build.outputs.version }}.json
+            dist/tests-v${{ steps.build.outputs.version }}.json
+      - name: Publish verified tag as GitHub release
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python scripts/publish_release.py --tag "$GITHUB_REF_NAME" --commit "$GITHUB_SHA"

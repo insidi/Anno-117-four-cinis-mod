@@ -38,6 +38,9 @@ def apply_obsidian_ops(existing, fragment):
 
 
 def build(source):
+    metadata = json.loads((ROOT / 'config/modinfo.json').read_text(encoding='utf-8-sig'))
+    if metadata['Version'] not in ('0.3.1', '0.3.2'):
+        raise ValueError('This historical builder only supports 0.3.1/0.3.2; use scripts/build_release.py')
     source = Path(source).resolve()
     target = ROOT / 'dist/cinis-four-directions'
     if source == target.resolve() or source in target.resolve().parents or target.resolve() in source.parents:
@@ -54,7 +57,6 @@ def build(source):
     source_before = file_hashes(source)
     before = file_hashes(source / 'data')
     fragment = ET.parse(ROOT / 'config/obsidian-modops.xml').getroot()
-    metadata = json.loads((ROOT / 'config/modinfo.json').read_text(encoding='utf-8-sig'))
     if target.exists():
         # Never silently include stale files from another working build.
         allowed = {'modinfo.json', 'README.md', 'OBSIDIAN-FIX.md'} | {'data/' + p for p in before}

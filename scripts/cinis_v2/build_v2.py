@@ -3,7 +3,7 @@
 maps:   * data/phil/cinis_four/easy/*.a7t   is rebuilt so the baked continental terrain matches the
           four Cinis positions stored in existing 0.2.0 savegames (rotation 0).
         * data/phil/cinis_four_v2/<variant>/ is created for new games: Cinis flush in the four corners,
-          Rotation90 0/3/2/1, terrain and area IDs rotated accordingly, PlayableArea 268..3828.
+          Rotation90 0/3/2/1, terrain and area IDs rotated accordingly, PlayableArea 248..3848.
 assets: writes data/base/config/export/assets.xml (template path, generator settings, horizon islands,
         plus the obsidian corrections from config/obsidian-modops.xml since 0.3.1).
 
@@ -45,7 +45,9 @@ NEW_LAYOUT = {'north': ((3328, 3328), 0), 'east': ((3328, 0), 3),
 LABELS = {'north': 'roman_dlc01_island_continental_01', 'east': 'cinis_east',
           'south': 'cinis_south', 'west': 'cinis_west'}
 # Keeps 248 tiles of every Cinis box outside the playable area, like vanilla (2440 of 2688).
-NEW_PLAYABLE = (268, 268, 3828, 3828)
+# The current vanilla expanded map ends at 2440 in a 2688-wide world:
+# 248 tiles behind Cinis, without adding its 20-tile opposite-side margin again.
+NEW_PLAYABLE = (248, 248, 3848, 3848)
 
 
 def rotate(grid, k):
